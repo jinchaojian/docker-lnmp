@@ -34,6 +34,15 @@ RUN apt-get update \
     && docker-php-ext-install sysvsem \
     && docker-php-ext-install sysvshm \
     && docker-php-ext-install opcache
+
+# xdebug扩展安装
+WORKDIR /root
+ADD ./tar/xdebug-2.6.0.tgz .
+WORKDIR xdebug-2.6.0
+RUN /usr/local/bin/phpize \
+    && ./configure --with-php-config=/usr/local/bin/php-config \
+    && make && make install
+    #&& docker-php-ext-enable xdebug
     #&& docker-php-ext-install pdo_firebird \
     #&& docker-php-ext-install pdo_dblib \
     #&& docker-php-ext-install pdo_oci \
