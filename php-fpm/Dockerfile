@@ -33,7 +33,22 @@ RUN apt-get update \
     && docker-php-ext-install sysvmsg \
     && docker-php-ext-install sysvsem \
     && docker-php-ext-install sysvshm \
-    && docker-php-ext-install opcache
+    && docker-php-ext-install opcache \
+    && :\
+    && apt-get install -y curl \
+    && apt-get install -y libcurl3 \
+    && apt-get install -y libcurl4-openssl-dev \
+    && docker-php-ext-install curl 
+
+# 安装redis拓展
+COPY ./tar/redis-4.1.0.tgz /tmp/redis.tgz
+RUN mkdir -p /tmp/redis \
+    && tar -xf /tmp/redis.tgz -C /tmp/redis --strip-components=1 \
+    && rm /tmp/redis.tgz \
+    && docker-php-ext-configure /tmp/redis --enable-redis \
+    && docker-php-ext-install /tmp/redis \
+    && rm -r /tmp/redis
+
 
 # xdebug扩展安装
 WORKDIR /root
@@ -41,7 +56,8 @@ ADD ./tar/xdebug-2.6.0.tgz .
 WORKDIR xdebug-2.6.0
 RUN /usr/local/bin/phpize \
     && ./configure --with-php-config=/usr/local/bin/php-config \
-    && make && make install
+    && make && make install \
+    && rm -r /root/xdebug-2.6.0
     #&& docker-php-ext-enable xdebug
     #&& docker-php-ext-install pdo_firebird \
     #&& docker-php-ext-install pdo_dblib \
@@ -56,11 +72,6 @@ RUN /usr/local/bin/phpize \
     #&& :\
     #&& apt-get install -y libmcrypt-dev \
     #&& docker-php-ext-install mcrypt \
-    #&& :\
-    #&& apt-get install -y curl \
-    #&& apt-get install -y libcurl3 \
-    #&& apt-get install -y libcurl4-openssl-dev \
-    #&& docker-php-ext-install curl \
     #&& :\
     #&& apt-get install -y libreadline-dev \
     #&& docker-php-ext-install readline \
