@@ -17,8 +17,9 @@ services:
 
   fpm:
     build: ./php-fpm
-    expose:
-      - "9000"
+    ports:
+      - "9000:9000"
+      - "9501:9501"
     volumes:
       - ./app/src:/usr/share/nginx/html:rw
       # Your php.ini

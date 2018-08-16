@@ -2,6 +2,7 @@ FROM php:7.2-fpm
 
 COPY ./sources.list.stretch /etc/apt/sources.list
 RUN apt-get update \
+    && apt-get install -y vim \
     && apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install gd \
@@ -58,7 +59,16 @@ RUN /usr/local/bin/phpize \
     && ./configure --with-php-config=/usr/local/bin/php-config \
     && make && make install \
     && rm -r /root/xdebug-2.6.0
-    #&& docker-php-ext-enable xdebug
+
+# swoole扩展安装
+WORKDIR /root
+ADD ./tar/swoole-src-4.0.4.tar.gz .
+WORKDIR swoole-src-4.0.4
+RUN /usr/local/bin/phpize \
+    && ./configure --with-php-config=/usr/local/bin/php-config \
+    && make && make install \
+    && rm -r /root/swoole-src-4.0.4
+
     #&& docker-php-ext-install pdo_firebird \
     #&& docker-php-ext-install pdo_dblib \
     #&& docker-php-ext-install pdo_oci \
