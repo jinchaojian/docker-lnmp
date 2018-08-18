@@ -69,6 +69,26 @@ RUN /usr/local/bin/phpize \
     && make && make install \
     && rm -r /root/swoole-src-4.0.4
 
+
+# fswatch监听文件变化重启服务
+WORKDIR /root
+ADD ./tar/fswatch-1.11.2.tar.gz .
+WORKDIR fswatch-1.11.2
+RUN ./configure \
+    && make && make install && ldconfig \
+    && rm -r /root/fswatch-1.11.2
+
+
+
+# 安装Composer
+WORKDIR /root
+RUN php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');" \
+    && php composer-setup.php \
+    && php -r "unlink('composer-setup.php');" \
+    && mv composer.phar /bin/composer \
+    && composer config -g repo.packagist composer https://packagist.phpcomposer.com
+
+
     #&& docker-php-ext-install pdo_firebird \
     #&& docker-php-ext-install pdo_dblib \
     #&& docker-php-ext-install pdo_oci \
