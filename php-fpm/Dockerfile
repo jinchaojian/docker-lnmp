@@ -3,6 +3,7 @@ FROM php:7.2-fpm
 COPY ./sources.list.stretch /etc/apt/sources.list
 RUN apt-get update \
     && apt-get install -y vim \
+    && apt-get install -y git \
     && apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install gd \
@@ -88,6 +89,11 @@ RUN php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.ph
     && mv composer.phar /bin/composer \
     && composer config -g repo.packagist composer https://packagist.phpcomposer.com
 
+
+# 配置环境变量
+WORKDIR /root
+RUN echo "export PATH=$PATH" >> /etc/profile \
+    && /bin/bash -c "source /etc/profile"
 
     #&& docker-php-ext-install pdo_firebird \
     #&& docker-php-ext-install pdo_dblib \
