@@ -62,12 +62,12 @@ RUN /usr/local/bin/phpize \
 
 # swoole扩展安装
 WORKDIR /root
-ADD ./tar/swoole-src-4.0.4.tar.gz .
-WORKDIR swoole-src-4.0.4
+ADD ./tar/swoole-src-4.2.5.tar.gz .
+WORKDIR swoole-src-4.2.5
 RUN /usr/local/bin/phpize \
     && ./configure --with-php-config=/usr/local/bin/php-config \
     && make && make install \
-    && rm -r /root/swoole-src-4.0.4
+    && rm -r /root/swoole-src-4.2.5
 
 
 # fswatch监听文件变化重启服务

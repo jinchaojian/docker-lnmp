@@ -26,7 +26,6 @@ services:
       # Your php.ini
       - ./php-fpm/php.ini:/usr/local/etc/php/php.ini
       #- ./conf/php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf:rw
-      #- ./log/:/var/log/dnmp/:rw
       - ./log/php/xdebug_remote.log:/var/log/php/xdebug_remote.log:rw
 
     networks:
