@@ -2,6 +2,8 @@ FROM php:7.2-fpm
 
 COPY ./sources.list.stretch /etc/apt/sources.list
 RUN apt-get update \
+    && apt-get install -y procps \
+    && apt-get install -y inetutils-ping \
     && apt-get install -y vim \
     && apt-get install -y git \
     && apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev \
@@ -63,12 +65,12 @@ RUN /usr/local/bin/phpize \
 
 # swoole扩展安装
 WORKDIR /root
-ADD ./tar/swoole-src-4.2.5.tar.gz .
-WORKDIR swoole-src-4.2.5
+ADD ./tar/swoole-src-4.2.13.tar.gz .
+WORKDIR swoole-src-4.2.13
 RUN /usr/local/bin/phpize \
     && ./configure --with-php-config=/usr/local/bin/php-config \
     && make && make install \
-    && rm -r /root/swoole-src-4.2.5
+    && rm -r /root/swoole-src-4.2.13
 
 
 # fswatch监听文件变化重启服务
