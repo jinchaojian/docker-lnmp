@@ -4,6 +4,8 @@ services:
     image: nginx:latest
     ports:
       - "8989:80"
+      - "8111:8111"
+      - "8112:8112"
       #- "443:443"
     volumes:
       # app
@@ -13,12 +15,15 @@ services:
       - ./nginx/conf.d/:/etc/nginx/conf.d/:ro
       - ./log/nginx/:/var/log/nginx/:rw
     networks:
-      - net-php
+      - default
 
   fpm:
     build: ./php-fpm
     ports:
       - "9501:9501"
+      - "9502:9502"
+      - "9503:9503"
+      - "9605:9605"
     expose:
       - "9000"
     volumes:
@@ -27,11 +32,9 @@ services:
       - ./php-fpm/php.ini:/usr/local/etc/php/php.ini
       #- ./conf/php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf:rw
       - ./log/php/xdebug_remote.log:/var/log/php/xdebug_remote.log:rw
-
     networks:
-      - net-php
-      - net-mysql
-      - net-redis
+      - default
+
 
   mysql:
     image: mysql:5.6
@@ -42,20 +45,29 @@ services:
       # - ./conf/my.cnf:/etc/mysql/my.cnf:ro
       - ./mysql/:/var/lib/mysql/:rw
       - ./log/mysql/:/var/log/mysql/:rw
-      #- ./conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
-      #- ./mysql/:/var/lib/mysql/:rw
+      - ./conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
     networks:
-      - net-mysql
+      - default
     environment:
       MYSQL_ROOT_PASSWORD: "chac"
 
   redis:
     image: redis:4.0
     networks:
-      - net-redis
+      - default
     ports:
       - "6379:6379"
+
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+      - "8666:80"
+    networks:
+      - default
+    environment:
+      - PMA_HOST=mysql
+      - PMA_PORT=3306
+
 networks:
-  net-php:
-  net-mysql:
-  net-redis:
+  default:
