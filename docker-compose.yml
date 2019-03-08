@@ -51,23 +51,24 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: "chac"
 
-  redis:
-    image: redis:4.0
-    networks:
-      - default
-    ports:
-      - "6379:6379"
+      
+  #redis:
+    #image: redis:4.0
+    #networks:
+      #- default
+    #ports:
+      #- "6379:6379"
 
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    ports:
-      - "8666:80"
-    networks:
-      - default
-    environment:
-      - PMA_HOST=mysql
-      - PMA_PORT=3306
+  #phpmyadmin:
+    #image: phpmyadmin/phpmyadmin:latest
+    #ports:
+      #- "8666:80"
+    #networks:
+      #- default
+    #environment:
+      #- PMA_HOST=mysql
+      #- PMA_PORT=3306
 
 networks:
   default:
